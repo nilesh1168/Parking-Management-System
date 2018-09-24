@@ -9,12 +9,15 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -290,24 +293,19 @@ public class Entry extends javax.swing.JFrame {
         //new Slot().setVisible(true);
         try {
             String cno=jTextField1.getText();
-        String cname=jTextField2.getText();
-        String lno= jTextField3.getText();
+            String cname=jTextField2.getText();
+            String lno= jTextField3.getText();
             long phn;
             phn = Long.parseLong(jTextField4.getText());
-        String type= (String) jComboBox1.getSelectedItem();
-        System.out.println(""+type+""+cno+""+cname+""+lno+""+phn);
-        
-        Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Parking?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "nilesh898");
-        String query1="insert into Customer values('?',?,'?');";
-            PreparedStatement p = con.prepareStatement(query1);
-            p.setString(1, cname);
-            p.setLong(2, phn);
-            p.setString(3,lno );
-            p.executeQuery();
-            
-            
-
+            Class.forName("java.sql.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Parking", "nilesh", "Nilesh@898");
+            Statement stmt=null;
+            stmt = con.createStatement();
+            int i=stmt.executeUpdate("insert into Customer values('"+cname+"',"+phn+",'"+lno+"');");
+            if(i!=0)
+                JOptionPane.showMessageDialog(null, "Record Inserted","Entry", 1);
+            stmt.close();
+            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
